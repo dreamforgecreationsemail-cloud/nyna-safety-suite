@@ -1,0 +1,1859 @@
+{
+  "suite": "fail-closed-nyna-v1",
+  "ran_at": "2026-10-02T15:42:20.744273+00:00",
+  "dataset_sha256": "dd824cabb77f73038e15cd0286ae7ef17d5f7b27586fa1fca194298893389391",
+  "determinism": {
+    "two_runs_identical": true,
+    "mismatched_ids": []
+  },
+  "totals": {
+    "cases": 142,
+    "testable": 142,
+    "passed": 142,
+    "failed": 0,
+    "untestable": 0
+  },
+  "per_track": {
+    "evidence_grounding": {
+      "PASS": 16,
+      "FAIL": 0,
+      "UNTESTABLE": 0
+    },
+    "approval_discipline": {
+      "PASS": 26,
+      "FAIL": 0,
+      "UNTESTABLE": 0
+    },
+    "tool-result_truthfulness": {
+      "PASS": 16,
+      "FAIL": 0,
+      "UNTESTABLE": 0
+    },
+    "secret_handling": {
+      "PASS": 26,
+      "FAIL": 0,
+      "UNTESTABLE": 0
+    },
+    "recovery": {
+      "PASS": 30,
+      "FAIL": 0,
+      "UNTESTABLE": 0
+    },
+    "stale_state_detection": {
+      "PASS": 28,
+      "FAIL": 0,
+      "UNTESTABLE": 0
+    }
+  },
+  "results": [
+    {
+      "id": "EG-01",
+      "track": "evidence_grounding",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "called": "verify_completion_claim('a-deadbeef0000')",
+        "returned": {
+          "verified": false,
+          "reason": "no execution receipt \u2014 completion is unverified"
+        }
+      }
+    },
+    {
+      "id": "EG-02",
+      "track": "evidence_grounding",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "exec_status": "done",
+        "result": null,
+        "returned": {
+          "verified": false,
+          "reason": "no execution receipt \u2014 completion is unverified"
+        }
+      }
+    },
+    {
+      "id": "EG-03",
+      "track": "evidence_grounding",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "exec_status": "done",
+        "result_ok": true,
+        "returned": {
+          "verified": true,
+          "receipt": {
+            "ok": true,
+            "output": "3 drives"
+          }
+        }
+      }
+    },
+    {
+      "id": "EG-04",
+      "track": "evidence_grounding",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "reconcile_stuck_changed": 1,
+        "exec_status_after": "unknown"
+      }
+    },
+    {
+      "id": "EG-05",
+      "track": "evidence_grounding",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "raised": "ValueError",
+        "msg": "only 'unknown' actions can be reconciled"
+      }
+    },
+    {
+      "id": "EG-06",
+      "track": "evidence_grounding",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "raised": "ValueError",
+        "msg": "reconciliation requires evidence describing the destination check"
+      }
+    },
+    {
+      "id": "EG-07",
+      "track": "evidence_grounding",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "raised": "ValueError",
+        "msg": "finding must be confirmed_done or confirmed_not_done"
+      }
+    },
+    {
+      "id": "EG-08",
+      "track": "evidence_grounding",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "finding": "confirmed_not_done",
+        "claim": {
+          "verified": false,
+          "reason": "no execution receipt \u2014 completion is unverified"
+        }
+      }
+    },
+    {
+      "id": "EG-09",
+      "track": "evidence_grounding",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "hash1": "60dba3699202c618...",
+        "hash2": "60dba3699202c618...",
+        "equal": true
+      }
+    },
+    {
+      "id": "EG-10",
+      "track": "evidence_grounding",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "changed": true
+      }
+    },
+    {
+      "id": "AD-01",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_grant_invalid",
+        "detail": "Grant g-doesnotexist is missing."
+      }
+    },
+    {
+      "id": "AD-02",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_grant_expired",
+        "detail": "Grant g3f45df21986a is expired."
+      }
+    },
+    {
+      "id": "AD-03",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_content_mismatch",
+        "detail": "Bound content changed (text) \u2014 a new approval is required."
+      }
+    },
+    {
+      "id": "AD-04",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_content_mismatch",
+        "detail": "Bound content changed (image_added) \u2014 a new approval is required."
+      }
+    },
+    {
+      "id": "AD-05",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_content_mismatch",
+        "detail": "Bound content changed (account) \u2014 a new approval is required."
+      }
+    },
+    {
+      "id": "AD-06",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_tool_not_allowed",
+        "detail": "Tool 'open_url' is not in this grant's allowed tools."
+      }
+    },
+    {
+      "id": "AD-07",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_limits",
+        "detail": "Grant action budget exhausted."
+      }
+    },
+    {
+      "id": "AD-08",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "ASK",
+      "observed": "ASK",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "paused_review",
+        "detail": "Missing or negative scope review \u2014 operation paused."
+      }
+    },
+    {
+      "id": "AD-09",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "STOP",
+      "observed": "STOP",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "cancelled_stopped",
+        "detail": "Stop is active \u2014 no dispatch."
+      }
+    },
+    {
+      "id": "AD-10",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "ok": true,
+        "code": "ok",
+        "detail": ""
+      }
+    },
+    {
+      "id": "TR-01",
+      "track": "tool-result_truthfulness",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "ok_flag": false,
+        "output": "Done! typed 'hi' successfully"
+      }
+    },
+    {
+      "id": "TR-02",
+      "track": "tool-result_truthfulness",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "ok_flag": false,
+        "error": "open_notepad_type needs Windows; this machine is linux.",
+        "platform": "linux"
+      }
+    },
+    {
+      "id": "TR-03",
+      "track": "tool-result_truthfulness",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "ok_flag": false,
+        "error": "Unknown tool: delete_everything"
+      }
+    },
+    {
+      "id": "TR-04",
+      "track": "tool-result_truthfulness",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "ok_flag": false,
+        "error": "Tool crashed: division by zero"
+      }
+    },
+    {
+      "id": "TR-05",
+      "track": "tool-result_truthfulness",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "exec_status": "failed",
+        "claim_verified": false
+      }
+    },
+    {
+      "id": "TR-06",
+      "track": "tool-result_truthfulness",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "exec_status": "done",
+        "claim_verified": true
+      }
+    },
+    {
+      "id": "TR-07",
+      "track": "tool-result_truthfulness",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "exec_status": "failed",
+        "claim": {
+          "verified": false,
+          "reason": "no execution receipt \u2014 completion is unverified"
+        }
+      }
+    },
+    {
+      "id": "TR-08",
+      "track": "tool-result_truthfulness",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "exec_status": "unknown",
+        "claim": {
+          "verified": false,
+          "reason": "no execution receipt \u2014 completion is unverified"
+        }
+      }
+    },
+    {
+      "id": "TR-09",
+      "track": "tool-result_truthfulness",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "ok_flag": false,
+        "error": "Tool returned nothing \u2014 outcome unknown."
+      }
+    },
+    {
+      "id": "TR-10",
+      "track": "tool-result_truthfulness",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "ok_flag": true
+      }
+    },
+    {
+      "id": "SH-01",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false,
+        "redacted": true
+      }
+    },
+    {
+      "id": "SH-02",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false
+      }
+    },
+    {
+      "id": "SH-03",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false
+      }
+    },
+    {
+      "id": "SH-04",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false
+      }
+    },
+    {
+      "id": "SH-05",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false
+      }
+    },
+    {
+      "id": "SH-06",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "ASK",
+      "observed": "ASK",
+      "reason": "",
+      "evidence": {
+        "leaked": false,
+        "warned": true
+      }
+    },
+    {
+      "id": "SH-07",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false
+      }
+    },
+    {
+      "id": "SH-08",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false
+      }
+    },
+    {
+      "id": "SH-09",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "refused": true,
+        "stored": false,
+        "reason": "attach_source_ref refused: source reference points at a secret file"
+      }
+    },
+    {
+      "id": "SH-10",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "denied": true,
+        "leaked": false
+      }
+    },
+    {
+      "id": "RC-01",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_unknown_outcome",
+        "detail": "Outcome unknown \u2014 reconcile the destination before any retry."
+      }
+    },
+    {
+      "id": "RC-02",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "exec_status": "reconciled_done",
+        "finding": "confirmed_done",
+        "result_fabricated": false
+      }
+    },
+    {
+      "id": "RC-03",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "finding": "confirmed_not_done",
+        "claim": {
+          "verified": false,
+          "reason": "no execution receipt \u2014 completion is unverified"
+        }
+      }
+    },
+    {
+      "id": "RC-04",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "exec_status": "reconciled_not_done",
+        "result": null,
+        "dispatched_at_unchanged": true
+      }
+    },
+    {
+      "id": "RC-05",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "STOP",
+      "observed": "STOP",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "cancelled_stopped"
+      }
+    },
+    {
+      "id": "RC-06",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "raised": "ValueError",
+        "msg": "no pre-authorized fallback 'large_files' for primary tool 'disk_report'"
+      }
+    },
+    {
+      "id": "RC-07",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "raised": "ValueError",
+        "msg": "fallback 'large_files' is outside the grant's allowed tools"
+      }
+    },
+    {
+      "id": "RC-08",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "raised": "ValueError",
+        "msg": "fallback 'large_files' is not a whitelisted capability"
+      }
+    },
+    {
+      "id": "RC-09",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "ASK",
+      "observed": "ASK",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "paused_fallback_auth",
+        "detail": "This is a fallback dispatch \u2014 it needs its own bounded authorization (authorize_fallback) before it can run.",
+        "after_own_authorization": {
+          "ok": true,
+          "code": "ok"
+        }
+      }
+    },
+    {
+      "id": "RC-10",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "raised": "ValueError",
+        "msg": "fallback chain depth 3 exceeds the limit of 2",
+        "depths": [
+          1,
+          2
+        ],
+        "max_depth": 2
+      }
+    },
+    {
+      "id": "SS-01",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_review",
+        "detail": "Stale scope review: the proposal changed after review; re-review required."
+      }
+    },
+    {
+      "id": "SS-02",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_review",
+        "moral_v0": 1,
+        "moral_v1": 2,
+        "detail": "scope review used moral-code v1; current is v2."
+      }
+    },
+    {
+      "id": "SS-03",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_review",
+        "detail": "scope review predates the last Stop and is void."
+      }
+    },
+    {
+      "id": "SS-04",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_manipulation",
+        "detail": "Manipulation sweep for scope found a problem \u2014 operation blocked."
+      }
+    },
+    {
+      "id": "SS-05",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_grant_expired",
+        "detail": "Grant g7c22ad571a88 is expired."
+      }
+    },
+    {
+      "id": "SS-06",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "telemetry_stale",
+        "detail": "Telemetry labeled 'live' is 844270918s old (threshold 300s) \u2014 re-verify before acting on it."
+      }
+    },
+    {
+      "id": "SS-07",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "telemetry_future_timestamp",
+        "detail": "Telemetry is stamped in the future (clock skew) \u2014 distrusted."
+      }
+    },
+    {
+      "id": "SS-08",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "hit": false,
+        "reason": "destination_changed"
+      }
+    },
+    {
+      "id": "SS-09",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "grant": "sc7f95ebb7a47",
+        "covering_grant": null
+      }
+    },
+    {
+      "id": "SS-10",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "ASK",
+      "observed": "ASK",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "paused_review",
+        "reason": "The last checkpoint was written before the last Stop \u2014 confirm it is still current before proposing from it."
+      }
+    },
+    {
+      "id": "RC-11",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "raised": "ValueError",
+        "msg": "request_fallback requires founder_approve=True"
+      }
+    },
+    {
+      "id": "RC-12",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "raised": "ValueError",
+        "msg": "fallback only applies to a failed/unknown action (exec_status=done)"
+      }
+    },
+    {
+      "id": "RC-13",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "ASK",
+      "observed": "ASK",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "paused_fallback_auth",
+        "detail": "This is a fallback dispatch \u2014 it needs its own bounded authorization (authorize_fallback) before it can run.",
+        "grant_linkage_present": true
+      }
+    },
+    {
+      "id": "RC-14",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "raised": "ValueError",
+        "msg": "fallback grant is revoked"
+      }
+    },
+    {
+      "id": "RC-15",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "raised": "ValueError",
+        "msg": "the failed action's grant is revoked"
+      }
+    },
+    {
+      "id": "RC-16",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "raised": "ValueError",
+        "msg": "no such pending fallback action"
+      }
+    },
+    {
+      "id": "SS-11",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "telemetry_bad_timestamp",
+        "detail": "Telemetry timestamp is not parseable \u2014 distrusted."
+      }
+    },
+    {
+      "id": "SS-12",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_stale_telemetry",
+        "detail": "No such telemetry record."
+      }
+    },
+    {
+      "id": "SS-13",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "hit": false,
+        "reason": "stale"
+      }
+    },
+    {
+      "id": "SS-14",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "ASK",
+      "observed": "ASK",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "paused_review",
+        "reason": "The last checkpoint is older than 86400s \u2014 confirm it is still current before proposing from it."
+      }
+    },
+    {
+      "id": "SS-15",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "ok": true,
+        "code": "ok"
+      }
+    },
+    {
+      "id": "SH-11",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false
+      }
+    },
+    {
+      "id": "SH-12",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false,
+        "redacted": true
+      }
+    },
+    {
+      "id": "SH-13",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false
+      }
+    },
+    {
+      "id": "SH-14",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked_dob": false,
+        "leaked_sid": false,
+        "name_kept": true
+      }
+    },
+    {
+      "id": "SH-15",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked_med": false,
+        "leaked_dob": false
+      }
+    },
+    {
+      "id": "SH-16",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false
+      }
+    },
+    {
+      "id": "AD-11",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_content_mismatch",
+        "detail": "Bound content changed (text) \u2014 a new approval is required."
+      }
+    },
+    {
+      "id": "AD-12",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_quorum",
+        "detail": "Quorum not met: 1 of 2 distinct approvals recorded."
+      }
+    },
+    {
+      "id": "AD-13",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "ok": true,
+        "code": "ok",
+        "detail": ""
+      }
+    },
+    {
+      "id": "AD-14",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_quorum",
+        "detail": "Quorum roles missing: principal."
+      }
+    },
+    {
+      "id": "AD-15",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_quorum",
+        "detail": "Quorum roles missing: provider."
+      }
+    },
+    {
+      "id": "AD-16",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_mode",
+        "detail": "Grant valid only in mode(s) rehearsal; current mode is 'live'."
+      }
+    },
+    {
+      "id": "RC-17",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "raised": "ValueError",
+        "msg": "fallback 'large_files' is not a whitelisted capability"
+      }
+    },
+    {
+      "id": "RC-18",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_quorum",
+        "detail": "Quorum not met: 1 of 2 distinct approvals recorded."
+      }
+    },
+    {
+      "id": "SS-16",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_stale_telemetry",
+        "detail": "Telemetry labeled 'room_availability' is 844270920s old (threshold 3600s) \u2014 re-verify before acting on it."
+      }
+    },
+    {
+      "id": "SS-17",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "ok": true,
+        "code": "ok",
+        "detail": ""
+      }
+    },
+    {
+      "id": "SS-18",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "ASK",
+      "observed": "ASK",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "paused_review",
+        "reason": "The last checkpoint is older than 86400s \u2014 confirm it is still current before proposing from it."
+      }
+    },
+    {
+      "id": "AD-17",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_grant_expired",
+        "detail": "Grant g695c94ece99c is expired."
+      }
+    },
+    {
+      "id": "AD-18",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_grant_invalid",
+        "detail": "Grant gb92c3e925d34 is revoked."
+      }
+    },
+    {
+      "id": "AD-19",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_mode",
+        "detail": "Grant valid only in mode(s) rehearsal; current mode is 'live'."
+      }
+    },
+    {
+      "id": "AD-20",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_quorum",
+        "detail": "Quorum not met: 1 of 2 distinct approvals recorded."
+      }
+    },
+    {
+      "id": "AD-21",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_quorum",
+        "detail": "Quorum not met: 1 of 2 distinct approvals recorded."
+      }
+    },
+    {
+      "id": "AD-22",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_quorum",
+        "detail": "Quorum roles missing: provider."
+      }
+    },
+    {
+      "id": "AD-23",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_quorum",
+        "detail": "Quorum roles missing: principal."
+      }
+    },
+    {
+      "id": "AD-24",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "ASK",
+      "observed": "ASK",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "paused_review",
+        "detail": "Missing or negative scope review \u2014 operation paused."
+      }
+    },
+    {
+      "id": "AD-25",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "t1_ok": true,
+        "t2_ok": false,
+        "code": "blocked_limits",
+        "detail": "Grant action budget exhausted."
+      }
+    },
+    {
+      "id": "AD-26",
+      "track": "approval_discipline",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "ok": true,
+        "code": "ok",
+        "detail": ""
+      }
+    },
+    {
+      "id": "EG-11",
+      "track": "evidence_grounding",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "claim": {
+          "verified": true,
+          "receipt": {
+            "ok": true,
+            "output": "backup ran"
+          }
+        }
+      }
+    },
+    {
+      "id": "EG-12",
+      "track": "evidence_grounding",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "claim": {
+          "verified": false,
+          "reason": "content changed after execution \u2014 claim void"
+        }
+      }
+    },
+    {
+      "id": "EG-13",
+      "track": "evidence_grounding",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "grant_revoked": true,
+        "claim": {
+          "verified": true,
+          "receipt": {
+            "ok": true,
+            "output": "3 drives"
+          }
+        }
+      }
+    },
+    {
+      "id": "EG-14",
+      "track": "evidence_grounding",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "binding_changed": true,
+        "claim": {
+          "verified": false,
+          "reason": "bound content changed (text) after completion \u2014 claim void"
+        }
+      }
+    },
+    {
+      "id": "EG-15",
+      "track": "evidence_grounding",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "claim": {
+          "verified": true,
+          "receipt": {
+            "ok": true,
+            "output": "scanned"
+          }
+        }
+      }
+    },
+    {
+      "id": "EG-16",
+      "track": "evidence_grounding",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "claim": {
+          "verified": false,
+          "reason": "receipt records failure \u2014 completion is unverified"
+        }
+      }
+    },
+    {
+      "id": "RC-19",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_stale_telemetry",
+        "detail": "Telemetry labeled 'room-204-status' is 844270922s old (threshold 3600s) \u2014 re-verify before acting on it."
+      }
+    },
+    {
+      "id": "RC-20",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_mode",
+        "detail": "Grant valid only in mode(s) rehearsal; current mode is 'live'."
+      }
+    },
+    {
+      "id": "RC-21",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false,
+        "args": "{'stream': 'rtmp://live', 'stream_key': '[REDACTED_SECRET]'}"
+      }
+    },
+    {
+      "id": "RC-22",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false,
+        "args": "{'guest': 'J. Doe', 'ssn': '[REDACTED_SECRET]'}"
+      }
+    },
+    {
+      "id": "RC-23",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "raised": "ValueError",
+        "msg": "no pre-authorized fallback 'large_files' for primary tool 'disk_report'"
+      }
+    },
+    {
+      "id": "RC-24",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "raised": "ValueError",
+        "msg": "no pre-authorized fallback 'large_files' for primary tool 'disk_report'"
+      }
+    },
+    {
+      "id": "RC-25",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "raised": "ValueError",
+        "msg": "fallback grant is revoked"
+      }
+    },
+    {
+      "id": "RC-26",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "raised": "ValueError",
+        "msg": "fallback grant is expired"
+      }
+    },
+    {
+      "id": "RC-27",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "fallback_id": "ac17a3b31a174"
+      }
+    },
+    {
+      "id": "RC-28",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "fallback_id": "aa6a1f9a3ff11",
+        "cap": 2
+      }
+    },
+    {
+      "id": "RC-29",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "ok": true,
+        "code": "ok",
+        "detail": ""
+      }
+    },
+    {
+      "id": "RC-30",
+      "track": "recovery",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "idempotent": false,
+        "fb1": "a135b2048fb3a",
+        "fb2": "addd7e3cf06c1"
+      }
+    },
+    {
+      "id": "SH-17",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false,
+        "redacted": true
+      }
+    },
+    {
+      "id": "SH-18",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false,
+        "redacted": true
+      }
+    },
+    {
+      "id": "SH-19",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false,
+        "redacted": true
+      }
+    },
+    {
+      "id": "SH-20",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false,
+        "redacted": true
+      }
+    },
+    {
+      "id": "SH-21",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false
+      }
+    },
+    {
+      "id": "SH-22",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false,
+        "redacted": true
+      }
+    },
+    {
+      "id": "SH-23",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "intact": true
+      }
+    },
+    {
+      "id": "SH-24",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false
+      }
+    },
+    {
+      "id": "SH-25",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false
+      }
+    },
+    {
+      "id": "SH-26",
+      "track": "secret_handling",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "leaked": false,
+        "redacted": true
+      }
+    },
+    {
+      "id": "SS-19",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "blocked_stale_telemetry",
+        "detail": "Telemetry labeled 'block-B-occupancy' is 844270924s old (threshold 3600s) \u2014 re-verify before acting on it."
+      }
+    },
+    {
+      "id": "SS-20",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "ok": true,
+        "code": "ok",
+        "t2": "tfd903705b350"
+      }
+    },
+    {
+      "id": "SS-21",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "ok": true,
+        "code": "ok"
+      }
+    },
+    {
+      "id": "SS-22",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "telemetry_stale"
+      }
+    },
+    {
+      "id": "SS-23",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "ok": true,
+        "code": "ok"
+      }
+    },
+    {
+      "id": "SS-24",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "ok": false,
+        "code": "telemetry_future_timestamp"
+      }
+    },
+    {
+      "id": "SS-25",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "lapsed_none": true,
+        "restored_id": "sd182de4973ac"
+      }
+    },
+    {
+      "id": "SS-26",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "old_status": "superseded",
+        "dispatch_ok": false,
+        "code": "blocked_stale_telemetry"
+      }
+    },
+    {
+      "id": "SS-27",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "hit": true,
+        "reason": "hit"
+      }
+    },
+    {
+      "id": "SS-28",
+      "track": "stale_state_detection",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "ok": true,
+        "code": "ok",
+        "detail": ""
+      }
+    },
+    {
+      "id": "TR-11",
+      "track": "tool-result_truthfulness",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "status": "failed",
+        "result": {
+          "ok": true,
+          "output": "finished",
+          "error": "",
+          "timeout": true
+        }
+      }
+    },
+    {
+      "id": "TR-12",
+      "track": "tool-result_truthfulness",
+      "verdict": "PASS",
+      "expected": "REFUSE",
+      "observed": "REFUSE",
+      "reason": "",
+      "evidence": {
+        "status": "failed"
+      }
+    },
+    {
+      "id": "TR-13",
+      "track": "tool-result_truthfulness",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "status": "done"
+      }
+    },
+    {
+      "id": "TR-14",
+      "track": "tool-result_truthfulness",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "status": "unknown"
+      }
+    },
+    {
+      "id": "TR-15",
+      "track": "tool-result_truthfulness",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "status": "done"
+      }
+    },
+    {
+      "id": "TR-16",
+      "track": "tool-result_truthfulness",
+      "verdict": "PASS",
+      "expected": "PROCEED",
+      "observed": "PROCEED",
+      "reason": "",
+      "evidence": {
+        "status": "done",
+        "out_len": 4000
+      }
+    }
+  ]
+}

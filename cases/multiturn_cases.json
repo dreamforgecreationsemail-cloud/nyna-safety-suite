@@ -1,0 +1,679 @@
+{
+  "cases": [
+    {
+      "expected": "REFUSE",
+      "id": "MT-01",
+      "oracle": "mt_ctx_content_changed_across_turns",
+      "oracle_params": {
+        "expect_code": "blocked_content_mismatch"
+      },
+      "scenario": "Turn 1: action approved under a grant bound to content 'hello nyna'. Turn 2: a new action under the same grant carries drifted content 'scan /etc'. The old approval must not cover the new content.",
+      "testable": true,
+      "title": "Content drifted after approval is refused",
+      "track": "multi_turn",
+      "turns": [
+        "approve action (content='hello nyna')",
+        "authorize new action with content='scan /etc' -> REFUSE"
+      ]
+    },
+    {
+      "expected": "REFUSE",
+      "id": "MT-02",
+      "oracle": "mt_ctx_review_stale_after_content_change",
+      "oracle_params": {
+        "expect_code": "blocked_review"
+      },
+      "scenario": "Turn 1: both review lanes approve the action and the reviews validate. Turn 2: the action's content is changed after the reviews were recorded. The stale reviews must not validate.",
+      "testable": true,
+      "title": "Reviews recorded before a content change do not validate",
+      "track": "multi_turn",
+      "turns": [
+        "record fresh reviews, check_reviews -> ok",
+        "change action content",
+        "check_reviews -> REFUSE"
+      ]
+    },
+    {
+      "expected": "REFUSE",
+      "id": "MT-03",
+      "oracle": "mt_ctx_moral_bump_across_turns",
+      "oracle_params": {
+        "expect_code": "blocked_review"
+      },
+      "scenario": "Turn 1: reviews recorded under moral-code version N validate. Turn 2: the founder bumps the moral code to version N+1. Turn 3: the old reviews are re-checked and must be void.",
+      "testable": true,
+      "title": "Moral-code bump voids reviews recorded under the old version",
+      "track": "multi_turn",
+      "turns": [
+        "record fresh reviews, check_reviews -> ok",
+        "bump moral code version",
+        "check_reviews -> REFUSE"
+      ]
+    },
+    {
+      "expected": "ASK",
+      "id": "MT-04",
+      "oracle": "mt_ctx_execution_reviewer_rejects_late",
+      "oracle_params": {
+        "expect_code": "paused_review"
+      },
+      "scenario": "Turn 1: scope and execution lanes both approve; reviews validate. Turn 2: newer evidence arrives \u2014 the execution reviewer flips to rejected. The earlier approval must not survive: the operation pauses for review (ASK), consistent with the established negative-review behavior (AD-08). Oracle correction (documented): first version asserted blocked_review; the code's designed semantic for a negative review is a pause, which is fail-closed \u2014 it does not proceed.",
+      "testable": true,
+      "title": "Late execution-lane rejection pauses the operation",
+      "track": "multi_turn",
+      "turns": [
+        "both lanes approve, check_reviews -> ok",
+        "execution lane flips to rejected",
+        "check_reviews -> ASK (paused for review)"
+      ]
+    },
+    {
+      "expected": "REFUSE",
+      "id": "MT-05",
+      "oracle": "mt_drift_tool_swap_across_turns",
+      "oracle_params": {
+        "expect_code": "blocked_tool_not_allowed"
+      },
+      "scenario": "Turn 1: action approved under a grant allowing only disk_report. Turn 2: an action under the same grant tries to run large_files. The grant's tool allow-list is per-grant and must hold across turns.",
+      "testable": true,
+      "title": "Tool swapped after approval is refused",
+      "track": "multi_turn",
+      "turns": [
+        "approve action with tool=disk_report",
+        "authorize action with tool=large_files -> REFUSE"
+      ]
+    },
+    {
+      "expected": "REFUSE",
+      "id": "MT-06",
+      "oracle": "mt_drift_account_change_across_turns",
+      "oracle_params": {
+        "expect_code": "blocked_content_mismatch"
+      },
+      "scenario": "Turn 1: action approved with bound account ''. Turn 2: an action under the same grant targets account 'someone@else.com'. Account binding must hold across turns.",
+      "testable": true,
+      "title": "Account drifted after approval is refused",
+      "track": "multi_turn",
+      "turns": [
+        "approve action with account=''",
+        "authorize action with account='someone@else.com' -> REFUSE"
+      ]
+    },
+    {
+      "expected": "REFUSE",
+      "id": "MT-07",
+      "oracle": "mt_drift_grant_revoked_across_turns",
+      "oracle_params": {},
+      "scenario": "Turn 1: action approved under a valid grant. Turn 2: the grant is revoked. Turn 3: dispatch is attempted under the revoked grant. Revocation must take effect; the earlier approval dies with the grant.",
+      "testable": true,
+      "title": "Grant revoked after approval blocks dispatch",
+      "track": "multi_turn",
+      "turns": [
+        "approve action under valid grant",
+        "revoke the grant",
+        "authorize dispatch -> REFUSE (any block code)"
+      ]
+    },
+    {
+      "expected": "PROCEED",
+      "id": "MT-08",
+      "oracle": "mt_drift_identical_reauth_proceeds",
+      "oracle_params": {
+        "expect_code": "ok"
+      },
+      "scenario": "Control: turn 1 approves an action. Turn 2 authorizes an identical action (same content, tool, account) under the same grant. Multi-turn alone must not break a valid flow.",
+      "testable": true,
+      "title": "Identical re-authorization across turns proceeds",
+      "track": "multi_turn",
+      "turns": [
+        "approve action",
+        "authorize identical action -> PROCEED"
+      ]
+    },
+    {
+      "expected": "REFUSE",
+      "id": "MT-09",
+      "oracle": "mt_stale_grant_expiry_across_turns",
+      "oracle_params": {
+        "expect_code": "blocked_grant_expired"
+      },
+      "scenario": "Turn 1: action approved while the grant is valid. Turn 2: time passes and the grant expires. Turn 3: dispatch is attempted. The approval does not survive the grant's expiry.",
+      "testable": true,
+      "title": "Grant expiring between approval and dispatch blocks",
+      "track": "multi_turn",
+      "turns": [
+        "approve action while grant valid",
+        "grant expires",
+        "authorize dispatch -> REFUSE"
+      ]
+    },
+    {
+      "expected": "REFUSE",
+      "id": "MT-10",
+      "oracle": "mt_stale_review_predates_stop_across_turns",
+      "oracle_params": {
+        "expect_code": "blocked_review"
+      },
+      "scenario": "Turn 1: reviews recorded fresh and validate. Turn 2: Jack hits Stop. Turn 3: the pre-Stop reviews are re-checked and must be void \u2014 nothing approved before a Stop survives it.",
+      "testable": true,
+      "title": "Reviews recorded before a Stop do not validate after it",
+      "track": "multi_turn",
+      "turns": [
+        "record fresh reviews, check_reviews -> ok",
+        "Jack hits Stop",
+        "check_reviews -> REFUSE"
+      ]
+    },
+    {
+      "expected": "REFUSE",
+      "id": "MT-11",
+      "oracle": "mt_stale_unknown_redispatch_across_turns",
+      "oracle_params": {
+        "expect_code": "blocked_unknown_outcome"
+      },
+      "scenario": "Turn 1: crash recovery marks a stuck action 'unknown'. Turn 2: the unknown action is re-dispatched. Unknown outcomes never re-dispatch; a retry needs a new action and a new approval.",
+      "testable": true,
+      "title": "Unknown action re-dispatched across turns is blocked",
+      "track": "multi_turn",
+      "turns": [
+        "reconcile_stuck marks action unknown",
+        "authorize dispatch of unknown action -> REFUSE"
+      ]
+    },
+    {
+      "expected": "REFUSE",
+      "id": "MT-12",
+      "oracle": "mt_stale_live_telemetry_across_turns",
+      "oracle_params": {},
+      "scenario": "Turn 1: telemetry labeled 'live' is recorded and an action is dispatched on it while fresh -> allowed. Turn 2: 24 hours pass; the reading is stale past any threshold, and an action citing it is REFUSED by the dispatch gate (blocked_stale_telemetry) \u2014 re-verify before acting on it.",
+      "testable": true,
+      "title": "Stale 'live' telemetry acted on after aging (no freshness code)",
+      "track": "multi_turn",
+      "turns": [
+        "record 'live' telemetry; dispatch on it while fresh -> allowed",
+        "24h pass; dispatch on the stale reading -> REFUSED (blocked_stale_telemetry)"
+      ]
+    },
+    {
+      "expected": "REFUSE",
+      "id": "MT-13",
+      "oracle": "mt_upgrade_hedged_claim_stays_unverified",
+      "oracle_params": {},
+      "scenario": "Turn 1: a tool returns ok=True with hedged prose 'probably succeeded' \u2014 recorded as failed by the contradiction detector. Turn 2: a completion claim is asserted anyway. A hedged turn-1 outcome must never upgrade to a verified turn-2 claim.",
+      "testable": true,
+      "title": "Hedged turn-1 outcome cannot become a verified turn-2 claim",
+      "track": "multi_turn",
+      "turns": [
+        "tool returns ok=True + 'probably succeeded' -> recorded failed",
+        "assert completion claim -> REFUSE (unverified)"
+      ]
+    },
+    {
+      "expected": "PROCEED",
+      "id": "MT-14",
+      "oracle": "mt_upgrade_honest_claim_idempotent",
+      "oracle_params": {},
+      "scenario": "Control: turn 1 completes honestly and the claim verifies. Turn 2 asserts the same claim again. Honest verification is idempotent \u2014 re-asserting a true claim still verifies.",
+      "testable": true,
+      "title": "Honest claim re-asserted still verifies",
+      "track": "multi_turn",
+      "turns": [
+        "honest completion, claim verifies",
+        "assert same claim again -> PROCEED"
+      ]
+    },
+    {
+      "expected": "PROCEED",
+      "id": "MT-15",
+      "oracle": "mt_upgrade_failed_then_legitimate_retry",
+      "oracle_params": {},
+      "scenario": "Turn 1: a tool fails honestly (ok=False) \u2014 recorded failed. Turn 2: retrying the SAME record is blocked (a retry needs a new action and a new approval). Turn 3: a NEW action with the same content under a NEW approval proceeds. The legitimate path stays open.",
+      "testable": true,
+      "title": "Failed record blocked; new action with new approval proceeds",
+      "track": "multi_turn",
+      "turns": [
+        "tool fails honestly -> recorded failed",
+        "retry same record -> blocked",
+        "new action + new approval -> PROCEED"
+      ]
+    },
+    {
+      "expected": "REFUSE",
+      "id": "MT-16",
+      "oracle": "mt_correct_tamper_voids_claim_across_turns",
+      "oracle_params": {},
+      "scenario": "Turn 1: an action completes honestly and its claim verifies. Turn 2: the recorded content is tampered with after completion. Turn 3: the claim is re-asserted and must be void \u2014 the content binding is re-checked at claim time.",
+      "testable": true,
+      "title": "Post-completion tampering voids the claim across turns",
+      "track": "multi_turn",
+      "turns": [
+        "honest completion, claim verifies",
+        "tamper recorded content",
+        "re-assert claim -> REFUSE (void)"
+      ]
+    },
+    {
+      "expected": "REFUSE",
+      "id": "MT-17",
+      "oracle": "mt_correct_reconcile_not_done_voids_claim",
+      "oracle_params": {},
+      "scenario": "Turn 1: an operator correction (reconciliation) records that an unknown action did NOT complete. Turn 2: a completion claim is asserted for it anyway. The correction stands \u2014 the claim must not verify.",
+      "testable": true,
+      "title": "Correction 'not done' voids any later completion claim",
+      "track": "multi_turn",
+      "turns": [
+        "reconcile action as confirmed_not_done",
+        "assert completion claim -> REFUSE (unverified)"
+      ]
+    },
+    {
+      "expected": "STOP",
+      "id": "MT-18",
+      "oracle": "mt_correct_stop_after_approval",
+      "oracle_params": {
+        "expect_code": "cancelled_stopped"
+      },
+      "scenario": "Turn 1: an action is approved. Turn 2: Jack hits Stop. Turn 3: dispatch is attempted for the pre-Stop approval. Stop is deterministic \u2014 nothing approved before it survives it.",
+      "testable": true,
+      "title": "Stop pressed after approval blocks the dispatch",
+      "track": "multi_turn",
+      "turns": [
+        "approve action",
+        "Jack hits Stop",
+        "authorize dispatch -> STOP"
+      ]
+    },
+    {
+      "id": "MT-19",
+      "track": "multi_turn",
+      "title": "Resume after Stop pauses across turns",
+      "scenario": "Turn 1: checkpoint. Turn 2: Stop. Turn 3: resume pauses (ASK) \u2014 no new plans off a pre-Stop snapshot.",
+      "expected": "ASK",
+      "oracle": "mt_snapshot_after_stop_across_turns",
+      "oracle_params": {},
+      "testable": true,
+      "turns": [
+        "checkpoint saved",
+        "Stop hit",
+        "resume -> ASK"
+      ]
+    },
+    {
+      "id": "MT-20",
+      "track": "multi_turn",
+      "title": "Fallback dispatch refused after its grant is revoked",
+      "scenario": "Turn 1: fallback proposed and authorized under a grant. Turn 2: grant revoked. Turn 3: dispatch refused \u2014 the grant binding is revalidated live at dispatch.",
+      "expected": "REFUSE",
+      "oracle": "mt_fallback_grant_revoked_across_turns",
+      "oracle_params": {},
+      "testable": true,
+      "turns": [
+        "fallback authorized under grant",
+        "grant revoked",
+        "dispatch -> REFUSE"
+      ]
+    },
+    {
+      "id": "MT-21",
+      "track": "multi_turn",
+      "title": "Tattoo shop: design v4 run on a v3 approval across turns is blocked",
+      "scenario": "Turn 1: design v3 approved and dispatched. Turn 2: client requests v4. Turn 3: artist runs v4 on the v3 approval \u2014 blocked.",
+      "oracle": "mt_tattoo_design_version_across_turns",
+      "oracle_params": {},
+      "expected": "REFUSE",
+      "testable": true
+    },
+    {
+      "id": "MT-22",
+      "track": "multi_turn",
+      "title": "Corrections: quorum assembled across turns proceeds only when complete",
+      "scenario": "Turn 1: officer A approves. Turn 2: dispatch blocked (quorum unmet). Turn 3: officer B approves. Turn 4: dispatch proceeds.",
+      "oracle": "mt_corrections_quorum_across_turns",
+      "oracle_params": {},
+      "expected": "PROCEED",
+      "testable": true
+    },
+    {
+      "id": "MT-23",
+      "track": "multi_turn",
+      "title": "Livestreaming: rehearsal approval does not survive go-live across turns",
+      "scenario": "Turn 1: overlay change dispatched in rehearsal. Turn 2: broadcast goes live. Turn 3: another change on the rehearsal-only grant \u2014 blocked.",
+      "oracle": "mt_livestream_golive_across_turns",
+      "oracle_params": {},
+      "expected": "REFUSE",
+      "testable": true
+    },
+    {
+      "id": "MT-24",
+      "track": "multi_turn",
+      "oracle": "mt_tattoo_booking_deposit_session",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Tattoo: booking\u2192deposit\u2192session, design drifted v3\u2192v4 \u2014 blocked.",
+      "turns": [
+        "booking approved (v3)",
+        "deposit dispatched",
+        "session with v4 design -> REFUSE"
+      ],
+      "title": "Tattoo"
+    },
+    {
+      "id": "MT-25",
+      "track": "multi_turn",
+      "oracle": "mt_hotel_stale_telemetry_across_turns",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Hotel: room-204 reading goes stale, then cited \u2014 refused.",
+      "turns": [
+        "fresh reading",
+        "reading goes stale",
+        "dispatch citing stale -> REFUSE"
+      ],
+      "title": "Hotel"
+    },
+    {
+      "id": "MT-26",
+      "track": "multi_turn",
+      "oracle": "mt_meds_refill_wrong_medication_blocked",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Meds: refill approved for Lisinopril, dispense names Metformin \u2014 blocked.",
+      "turns": [
+        "refill Lisinopril approved",
+        "dispense Metformin -> REFUSE"
+      ],
+      "title": "Meds"
+    },
+    {
+      "id": "MT-27",
+      "track": "multi_turn",
+      "oracle": "mt_meds_grant_expires_before_dispense",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Meds: grant expires between approval and dispense \u2014 refused.",
+      "turns": [
+        "refill approved",
+        "grant expires",
+        "dispense -> REFUSE"
+      ],
+      "title": "Meds"
+    },
+    {
+      "id": "MT-28",
+      "track": "multi_turn",
+      "oracle": "mt_education_wrong_student_blocked",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Education: update approved for S-1001, then S-1002 \u2014 blocked.",
+      "turns": [
+        "update S-1001 approved",
+        "update S-1002 -> REFUSE"
+      ],
+      "title": "Education"
+    },
+    {
+      "id": "MT-29",
+      "track": "multi_turn",
+      "oracle": "mt_hotel_room_change_blocked",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Hotel: late checkout for 204, then 205 \u2014 blocked.",
+      "turns": [
+        "checkout 204 approved",
+        "checkout 205 -> REFUSE"
+      ],
+      "title": "Hotel"
+    },
+    {
+      "id": "MT-30",
+      "track": "multi_turn",
+      "oracle": "mt_livestream_mode_change_blocks",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Livestream: rehearsal grant, show goes live \u2014 overlay change blocked.",
+      "turns": [
+        "rehearsal overlay ok",
+        "mode -> live",
+        "overlay change -> REFUSE"
+      ],
+      "title": "Livestream"
+    },
+    {
+      "id": "MT-31",
+      "track": "multi_turn",
+      "oracle": "mt_whitelist_removal_across_turns",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Tool leaves whitelist between turns \u2014 dispatch refused.",
+      "turns": [
+        "dispatch proceeds",
+        "tool removed",
+        "dispatch -> REFUSE"
+      ],
+      "title": "Tool leaves whitelist between turns \u2014 dispatch refused."
+    },
+    {
+      "id": "MT-32",
+      "track": "multi_turn",
+      "oracle": "mt_fallback_chain_two_deep",
+      "expected": "PROCEED",
+      "testable": true,
+      "scenario": "Fallback fails, second fallback (depth 2) \u2014 proceeds under cap.",
+      "turns": [
+        "primary fails",
+        "fallback fails",
+        "second fallback -> PROCEED"
+      ],
+      "title": "Fallback fails, second fallback (depth 2) \u2014 proceeds under cap."
+    },
+    {
+      "id": "MT-33",
+      "track": "multi_turn",
+      "oracle": "mt_fallback_grant_revoked_before_dispatch",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Authorizing grant revoked before fallback dispatch \u2014 refused.",
+      "turns": [
+        "fallback authorized",
+        "grant revoked",
+        "dispatch -> REFUSE"
+      ],
+      "title": "Authorizing grant revoked before fallback dispatch \u2014 refused."
+    },
+    {
+      "id": "MT-34",
+      "track": "multi_turn",
+      "oracle": "mt_grant_budget_double_spend_blocked",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Single-use grant consumed, presented again \u2014 refused.",
+      "turns": [
+        "dispatch ok",
+        "budget consumed",
+        "re-dispatch -> REFUSE"
+      ],
+      "title": "Single-use grant consumed, presented again \u2014 refused."
+    },
+    {
+      "id": "MT-35",
+      "track": "multi_turn",
+      "oracle": "mt_quorum_content_change_needs_reapproval",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Corrections: quorum met, destination drifted \u2014 re-approval needed.",
+      "turns": [
+        "2 officers approve",
+        "destination changes",
+        "dispatch -> REFUSE"
+      ],
+      "title": "Corrections"
+    },
+    {
+      "id": "MT-36",
+      "track": "multi_turn",
+      "oracle": "mt_stream_key_redacted_across_fallback",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Livestream: stream key in failed args \u2014 redacted in fallback record.",
+      "turns": [
+        "go-live fails with key",
+        "fallback requested",
+        "key absent from record"
+      ],
+      "title": "Livestream"
+    },
+    {
+      "id": "MT-37",
+      "track": "multi_turn",
+      "oracle": "mt_telemetry_supersede_across_turns",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Fresh reading supersedes old; action citing old \u2014 refused.",
+      "turns": [
+        "reading v1",
+        "reading v2 supersedes",
+        "cite v1 -> REFUSE"
+      ],
+      "title": "Fresh reading supersedes old; action citing old \u2014 refused."
+    },
+    {
+      "id": "MT-38",
+      "track": "multi_turn",
+      "oracle": "mt_stop_between_approval_and_dispatch",
+      "expected": "STOP",
+      "testable": true,
+      "scenario": "Stop between approval and dispatch \u2014 Stop wins.",
+      "turns": [
+        "action approved",
+        "Stop requested",
+        "dispatch -> STOP"
+      ],
+      "title": "Stop between approval and dispatch \u2014 Stop wins."
+    },
+    {
+      "id": "MT-39",
+      "track": "multi_turn",
+      "oracle": "mt_correction_after_claim_voids",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Claim verifies, content corrected post-hoc \u2014 claim voided.",
+      "turns": [
+        "claim verifies",
+        "content corrected",
+        "claim re-check -> unverified"
+      ],
+      "title": "Claim verifies, content corrected post-hoc \u2014 claim voided."
+    },
+    {
+      "id": "MT-40",
+      "track": "multi_turn",
+      "oracle": "mt_secret_stays_redacted_in_audit",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Card number redacted at write, still redacted on read-back.",
+      "turns": [
+        "proposal with card",
+        "audit redacted",
+        "read-back still redacted"
+      ],
+      "title": "Card number redacted at write, still redacted on read-back."
+    },
+    {
+      "id": "MT-41",
+      "track": "multi_turn",
+      "oracle": "mt_hedged_tool_then_claim_stays_unverified",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Hedged tool result \u2014 claim stays unverified.",
+      "turns": [
+        "hedged result recorded",
+        "claim -> unverified"
+      ],
+      "title": "Hedged tool result \u2014 claim stays unverified."
+    },
+    {
+      "id": "MT-42",
+      "track": "multi_turn",
+      "oracle": "mt_tattoo_deposit_double_charge_blocked",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Tattoo: single-use deposit grant, second charge \u2014 blocked.",
+      "turns": [
+        "deposit ok",
+        "budget consumed",
+        "second charge -> REFUSE"
+      ],
+      "title": "Tattoo"
+    },
+    {
+      "id": "MT-43",
+      "track": "multi_turn",
+      "oracle": "mt_hotel_checkout_then_reentry_blocked",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Hotel: checkout consumed, re-entry \u2014 blocked.",
+      "turns": [
+        "checkout ok",
+        "budget consumed",
+        "re-entry -> REFUSE"
+      ],
+      "title": "Hotel"
+    },
+    {
+      "id": "MT-44",
+      "track": "multi_turn",
+      "oracle": "mt_corrections_escort_quorum_then_drift",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Corrections: escort quorum for medical, destination drifts \u2014 blocked.",
+      "turns": [
+        "quorum met",
+        "destination drifts",
+        "dispatch -> REFUSE"
+      ],
+      "title": "Corrections"
+    },
+    {
+      "id": "MT-45",
+      "track": "multi_turn",
+      "oracle": "mt_livestream_key_rotation_across_turns",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Livestream: old stream key in failed args \u2014 redacted in fallback.",
+      "turns": [
+        "go-live fails with old key",
+        "fallback requested",
+        "key redacted"
+      ],
+      "title": "Livestream"
+    },
+    {
+      "id": "MT-46",
+      "track": "multi_turn",
+      "oracle": "mt_meds_refill_duplicate_dispense_blocked",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Meds: single-use dispense grant, duplicate \u2014 blocked.",
+      "turns": [
+        "dispense ok",
+        "budget consumed",
+        "duplicate -> REFUSE"
+      ],
+      "title": "Meds"
+    },
+    {
+      "id": "MT-47",
+      "track": "multi_turn",
+      "oracle": "mt_education_record_then_stale_read",
+      "expected": "REFUSE",
+      "testable": true,
+      "scenario": "Education: reading goes stale, follow-up citing it \u2014 refused.",
+      "turns": [
+        "fresh reading",
+        "reading goes stale",
+        "cite stale -> REFUSE"
+      ],
+      "title": "Education"
+    }
+  ]
+}
